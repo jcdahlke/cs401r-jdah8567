@@ -26,3 +26,8 @@ output "sagemaker_domain_id" {
   description = "ID of the SageMaker Domain"
   value       = module.sagemaker.domain_id
 }
+
+output "private_subnet_id" {
+  description = "ID of the private subnet"
+  value       = module.vpc.private_subnet_id
+}

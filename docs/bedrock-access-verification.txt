@@ -1,0 +1,33 @@
+=== Step 4 verification ===
+
+=== Quota: Titan Text Embeddings V2 ===
+-------------------------------------------------------------------------------------------------------------------------
+|                                                   ListServiceQuotas                                                   |
++-----------------------------------------------------------------------------------------------------------+-----------+
+|  Model units per provisioned model for Amazon Titan Text Embeddings V2                                    |  0.0      |
+|  Batch inference input file size (in GB) for Titan Text Embeddings V2                                     |  1.0      |
+|  Sum of in-progress and submitted batch inference jobs using a base model for Titan Text Embeddings V2    |  100.0    |
+|  Sum of in-progress and submitted batch inference jobs using a custom model for Titan Text Embeddings V2  |  3.0      |
+|  On-demand model inference requests per minute for Amazon Titan Text Embeddings V2                        |  6000.0   |
+|  Records per batch inference job for Titan Text Embeddings V2                                             |  100000.0 |
+|  Minimum number of records per batch inference job for Titan Text Embeddings V2                           |  100.0    |
+|  Records per input file per batch inference job for Titan Text Embeddings V2                              |  100000.0 |
+|  On-demand model inference tokens per minute for Amazon Titan Text Embeddings V2                          |  300000.0 |
+|  Batch inference job size (in GB) for Titan Text Embeddings V2                                            |  5.0      |
++-----------------------------------------------------------------------------------------------------------+-----------+
+
+=== Quota: Claude Haiku 4.5 ===
+----------------------------------------------------------------------------------------------------------------
+|                                               ListServiceQuotas                                              |
++-------------------------------------------------------------------------------------------------+------------+
+|  Cross-region model inference requests per minute for Anthropic Claude Haiku 4.5                |  10000.0   |
+|  Cross-region model inference tokens per minute for Anthropic Claude Haiku 4.5                  |  5000000.0 |
+|  Global cross-region model inference tokens per minute for Anthropic Claude Haiku 4.5           |  5000000.0 |
+|  Batch inference input file size (in GB) for Claude Haiku 4.5                                   |  1.0       |
+|  Records per input file per batch inference job for Claude Haiku 4.5                            |  100000.0  |
+|  Records per batch inference job for Claude Haiku 4.5                                           |  100000.0  |
+|  Batch inference job size (in GB) for Claude Haiku 4.5                                          |  5.0       |
+|  Global cross-region model inference requests per minute for Anthropic Claude Haiku 4.5         |  10000.0   |
+|  Sum of in-progress and submitted batch inference jobs using a base model for Claude Haiku 4.5  |  100.0     |
+|  Minimum number of records per batch inference job for Claude Haiku 4.5                         |  100.0     |
++-------------------------------------------------------------------------------------------------+------------+

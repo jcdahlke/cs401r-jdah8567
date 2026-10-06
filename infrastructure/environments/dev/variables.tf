@@ -39,3 +39,9 @@ variable "sagemaker_instance_type" {
   type        = string
   default     = "ml.t3.medium"
 }
+
+variable "private_subnet_cidr" {
+  description = "CIDR block for the private subnet"
+  type        = string
+  default     = "10.0.1.0/24"
+}
