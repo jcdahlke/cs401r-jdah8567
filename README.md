@@ -101,6 +101,56 @@ make local-validate LOCAL_OUT=docs/lab2-localstack-output.txt
 Applies the vpc, storage, and iam modules to LocalStack with the NAT Gateway
 and lifecycle rules disabled, and confirms all three IAM roles exist.
 
+## Lab 3 additions: model development
+
+Lab 3 builds two of NorthStar's AI systems on the Lab 2 features:
+- **Track A**, a churn model: XGBoost trained on the Feature Store offline store via Athena.
+- **Track B**, retention-offer generation: RAG over `northstar-policy-docs/` with Bedrock.
+
+Design and results:
+- [`docs/lab3-model-design.md`](docs/lab3-model-design.md)
+- [`docs/lab3-evaluation-report.md`](docs/lab3-evaluation-report.md)
+
+| Path | What it is |
+|---|---|
+| `churn_training_skeleton.py` | Churn training: Athena query → XGBoost → baseline + bootstrap lift CI → slices → MLflow App run → Model Registry (`--register`, `PendingManualApproval`) |
+| `rag/offer_rag.py` | RAG pipeline: header chunking → Titan Text Embeddings v2 → FAISS → tier card from POL-LOY-011 §4 → Claude Haiku 4.5 |
+| `rag/run_eval.py` | Runs the RAGAS harness (`evaluation_harness.py`) N times for the `baseline` / `improved` / `tiercard` configs |
+| `notebooks/lab3-demo.ipynb` | End-to-end Track B demo, committed with outputs |
+| `docs/lab3-evidence/` | Graded evidence: metrics, slices, plots, RAGAS results, examples and failures |
+
+### Train and register the churn model
+
+Run locally with your own AWS credentials, which the Athena query needs:
+
+```bash
+pip install xgboost scikit-learn "sagemaker<3" mlflow sagemaker-mlflow
+python churn_training_skeleton.py --artifacts-bucket northstar-dev-data-<account> \
+  --max-depth 3 --eta 0.05 --num-round 400 \
+  --mlflow-arn <MLflow App ARN> --run-name xgb-d3-eta0.05 \
+  --output-data-dir docs/lab3-evidence [--register]
+```
+
+Metrics land in `--output-data-dir` (`evaluation_metrics.json`). Runs are logged to the MLflow App experiment `northstar-churn`. `--register` adds a `PendingManualApproval` version to `northstar-churn-models`.
+
+### Run and evaluate the offer generator
+
+```bash
+pip install faiss-cpu langchain-text-splitters ragas datasets "langchain-community<0.4" langchain-aws
+python rag/run_eval.py                  # 2 runs of each config, 4 test cases each
+python rag/run_eval.py --only tiercard  # one config only
+```
+
+Per-run CSVs go to `evaluation_results/`. The graded copy is `docs/lab3-evidence/rag_eval.csv` (the final `tiercard` config); the other configs are saved as `rag_eval_<config>.csv`. The RAGAS judge is Claude Haiku 4.5 on Bedrock (no OpenAI key needed).
+
+### Lab 3 teardown
+
+```bash
+bash scripts/teardown-lab3.sh   # endpoints, endpoint configs, running jobs, MLflow Tracking Server check
+```
+
+Output: `docs/lab3-teardown-output.txt`. The MLflow **App** is kept deliberately: it costs nothing and Labs 4 and 6 use it.
+
 ## Teardown
 
 The NAT Gateway bills about $0.045/hour whether or not it is used, so tear
