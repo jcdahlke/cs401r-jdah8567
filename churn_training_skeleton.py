@@ -305,6 +305,8 @@ def load_features_from_feature_store(feature_group_name: str,
     query.run(query_string=query_string,
               output_location=f"s3://{artifacts_bucket}/artifacts/athena-results/")
     query.wait()
+    # The evidence script looks this ID up in Athena to export the SQL that ran.
+    print(f"Athena QueryExecutionId: {query.get_query_execution()['QueryExecution']['QueryExecutionId']}")
     df = query.as_dataframe()
     return df
 
