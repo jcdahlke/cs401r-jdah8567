@@ -1,0 +1,33 @@
+==> Lab 3 evidence  (track B, us-east-1)
+[1/5] Identity
+  OK    account 342973270367  --  arn:aws:iam::342973270367:user/cs401r-lab
+[2/5] Evidence files
+  OK    docs/lab3-evidence/train-final.log
+  OK    docs/lab3-evidence/evaluation_metrics.json
+  OK    docs/lab3-evidence/slice-evaluation.csv
+  OK    docs/lab3-evidence/confusion-matrix.png
+  OK    docs/lab3-evidence/feature-importance.png
+  OK    docs/lab3-evaluation-report.md
+  OK    docs/lab3-model-design.md
+  OK    docs/bedrock-access-verification.txt
+  OK    notebooks/lab3-demo.ipynb
+  OK    docs/lab3-evidence/rag_eval.csv
+  OK    docs/lab3-evidence/track-b-examples.md
+[3/5] Content checks
+  OK    gate precision_top10 >= 0.50
+  OK    gate recall_top10 >= 0.25
+  OK    gate lift 95% CI excludes zero
+  OK    slice-evaluation.csv  --  4 tiers
+  OK    demo notebook  --  5 code cells, one clean run, 5 with output
+  OK    rag_eval.csv  --  8 test cases (harness has 4+)
+[4/5] AWS exports: Athena, MLflow, Model Registry
+  OK    Athena query  --  a03b2651-74e2-4059-9189-20cb39cb5294 SUCCEEDED, 682216 bytes scanned
+  OK    MLflow App reuses Lab 1 infrastructure  --  northstar-dev-MLEngineer, s3://northstar-dev-data-342973270367/artifacts/mlflow/
+  OK    MLflow runs  --  6 runs with params and metrics in 'northstar-churn'
+  OK    MLflow runs vary  --  eta, xgboost_version, scale_pos_weight, max_depth, num_round
+  OK    consistency: MLflow  --  a tracked run matches auc_roc=0.784
+  OK    Model Registry  --  2 PendingManualApproval version(s); latest v2
+  OK    consistency: registry  --  v2 metadata matches evaluation_metrics.json
+[5/5] Summary
+  25 OK, 0 WARN, 0 FAIL
+  Evidence complete. Next: bash scripts/teardown-lab3.sh, then commit and tag lab3-submit.

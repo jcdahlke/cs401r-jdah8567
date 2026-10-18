@@ -1,0 +1,34 @@
+{
+  "Bronze": {
+    "n": 1071,
+    "n_churners": 361,
+    "auc": 0.7586,
+    "recall_at_10": 0.4543,
+    "flag_low_recall": false,
+    "too_small": false
+  },
+  "Silver": {
+    "n": 1139,
+    "n_churners": 226,
+    "auc": 0.7143,
+    "recall_at_10": 0.1903,
+    "flag_low_recall": true,
+    "too_small": false
+  },
+  "Gold": {
+    "n": 483,
+    "n_churners": 52,
+    "auc": 0.7525,
+    "recall_at_10": 0.1154,
+    "flag_low_recall": true,
+    "too_small": false
+  },
+  "Platinum": {
+    "n": 307,
+    "n_churners": 21,
+    "auc": 0.8775,
+    "recall_at_10": 0.2381,
+    "flag_low_recall": false,
+    "too_small": true
+  }
+}

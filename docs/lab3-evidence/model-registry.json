@@ -1,0 +1,53 @@
+{
+  "ModelPackageGroupName": "northstar-churn-models",
+  "Versions": [
+    {
+      "ModelPackageArn": "arn:aws:sagemaker:us-east-1:342973270367:model-package/northstar-churn-models/2",
+      "ModelPackageVersion": 2,
+      "ModelApprovalStatus": "PendingManualApproval",
+      "CreationTime": "2026-10-14 10:25:24.626000-06:00",
+      "ModelPackageDescription": "XGBoost churn model 20261014T162522Z. AUC 0.784, P@10 0.7267, R@10 0.3303, lift CI [0.0416, 0.0795]",
+      "CustomerMetadataProperties": {
+        "auc_roc": "0.784",
+        "auc_vs_baseline": "0.0617",
+        "baseline_auc": "0.7223",
+        "eta": "0.05",
+        "eval_timestamp": "2026-10-14T16:25:22.204027",
+        "feature_columns": "days_since_last_purchase customer_tenure_days purchase_frequency_30d purchase_frequency_90d purchase_frequency_180d avg_order_value total_spend_90d total_lifetime_value avg_basket_size_6m category_diversity_score online_to_store_ratio",
+        "lift_ci_high": "0.0795",
+        "lift_ci_low": "0.0416",
+        "max_depth": "3",
+        "n_val_samples": "3000",
+        "positive_rate_val": "0.22",
+        "precision_top10": "0.7267",
+        "recall_top10": "0.3303",
+        "scale_pos_weight": "3.544805194805195",
+        "xgboost_version": "3.2.0"
+      }
+    },
+    {
+      "ModelPackageArn": "arn:aws:sagemaker:us-east-1:342973270367:model-package/northstar-churn-models/1",
+      "ModelPackageVersion": 1,
+      "ModelApprovalStatus": "PendingManualApproval",
+      "CreationTime": "2026-10-13 12:52:14.416000-06:00",
+      "ModelPackageDescription": "XGBoost churn model 20261013T185213Z. AUC 0.7764, P@10 0.7033, R@10 0.3197, lift CI [0.0346, 0.0725]",
+      "CustomerMetadataProperties": {
+        "auc_roc": "0.7764",
+        "auc_vs_baseline": "0.0542",
+        "baseline_auc": "0.7223",
+        "eta": "0.1",
+        "eval_timestamp": "2026-10-13T18:52:13.642525",
+        "feature_columns": "days_since_last_purchase customer_tenure_days purchase_frequency_30d purchase_frequency_90d purchase_frequency_180d avg_order_value total_spend_90d total_lifetime_value avg_basket_size_6m category_diversity_score online_to_store_ratio",
+        "lift_ci_high": "0.0725",
+        "lift_ci_low": "0.0346",
+        "max_depth": "6",
+        "n_val_samples": "3000",
+        "positive_rate_val": "0.22",
+        "precision_top10": "0.7033",
+        "recall_top10": "0.3197",
+        "scale_pos_weight": "3.544805194805195",
+        "xgboost_version": "3.2.0"
+      }
+    }
+  ]
+}

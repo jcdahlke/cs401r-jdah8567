@@ -1,0 +1,70 @@
+sagemaker.config INFO - Not applying SDK defaults from location: C:\ProgramData\sagemaker\sagemaker\config.yaml
+sagemaker.config INFO - Not applying SDK defaults from location: C:\Users\jcdah\AppData\Local\sagemaker\sagemaker\config.yaml
+C:\Users\jcdah\AppData\Roaming\Python\Python314\site-packages\sagemaker\__init__.py:86: SageMakerV2DeprecationWarning: You are using the SageMaker Python SDK v2, which is on path of deprecation. v3 is the actively developed major version.
+See https://github.com/aws/sagemaker-python-sdk/blob/master/migration.md for the migration guide. Set SAGEMAKER_SUPPRESS_V2_WARNING=1 to silence this warning.
+  warn_v2_deprecation()
+You are using the SageMaker Python SDK v2, which is on path of deprecation. v3 is the actively developed major version.
+See https://github.com/aws/sagemaker-python-sdk/blob/master/migration.md for the migration guide. Set SAGEMAKER_SUPPRESS_V2_WARNING=1 to silence this warning.
+============================================================
+NorthStar Churn Prediction — Training Script
+============================================================
+Athena QueryExecutionId: a03b2651-74e2-4059-9189-20cb39cb5294
+Preprocessing 9,999 samples...
+  Positive class rate: 22.0%
+  Feature matrix shape: (9999, 11)
+
+Train: 6,999 | Validation: 3,000
+
+Training XGBoost with params: {
+  "objective": "binary:logistic",
+  "eval_metric": [
+    "logloss",
+    "auc"
+  ],
+  "max_depth": 3,
+  "eta": 0.05,
+  "min_child_weight": 5,
+  "subsample": 0.8,
+  "colsample_bytree": 0.8,
+  "scale_pos_weight": 3.544805194805195,
+  "seed": 42,
+  "verbosity": 1
+}
+[0]	train-logloss:0.68271	train-auc:0.74745	validation-logloss:0.68283	validation-auc:0.73768
+[25]	train-logloss:0.56309	train-auc:0.78448	validation-logloss:0.56680	validation-auc:0.77585
+[50]	train-logloss:0.53576	train-auc:0.79174	validation-logloss:0.54282	validation-auc:0.77758
+[75]	train-logloss:0.52451	train-auc:0.80086	validation-logloss:0.53493	validation-auc:0.78036
+[100]	train-logloss:0.51606	train-auc:0.80909	validation-logloss:0.53040	validation-auc:0.78257
+[125]	train-logloss:0.50916	train-auc:0.81746	validation-logloss:0.52744	validation-auc:0.78312
+[150]	train-logloss:0.50278	train-auc:0.82467	validation-logloss:0.52446	validation-auc:0.78374
+[173]	train-logloss:0.49693	train-auc:0.83052	validation-logloss:0.52182	validation-auc:0.78401
+C:\Users\jcdah\CS_AI_Enterprise\cs401r-jdah8567\churn_training_skeleton.py:547: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "eval_timestamp": datetime.utcnow().isoformat(),
+C:\Users\jcdah\CS_AI_Enterprise\cs401r-jdah8567\churn_training_skeleton.py:732: UserWarning: [20:29:32] WARNING: C:\actions-runner\_work\xgboost\xgboost\src\c_api\c_api.cc:1573: Saving model in the UBJSON format as default.  You can use a file extension: `json` or `ubj` to choose between formats.
+  model.save_model(model_path)
+C:\Users\jcdah\CS_AI_Enterprise\cs401r-jdah8567\churn_training_skeleton.py:747: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "training_date": datetime.utcnow().isoformat(),
+
+── Evaluation Results ──────────────────────────────
+  precision_top10          : 0.7267  (threshold: 0.5000)  ✓ PASS
+  recall_top10             : 0.3303  (threshold: 0.2500)  ✓ PASS
+  auc_lift 95% CI          : [0.0416, 0.0795]  (must exclude 0)  ✓ PASS
+  All thresholds passed ✓
+
+── Slice Evaluation (loyalty_tier) ─────────────────
+  aggregate n= 3000 churners= 660 R@10=0.330  (cutoff=0.6506)
+  Bronze    n= 1071 churners= 361 AUC=0.759 R@10=0.454
+  Silver    n= 1139 churners= 226 AUC=0.714 R@10=0.190  <-- LOW RECALL
+  Gold      n=  483 churners=  52 AUC=0.753 R@10=0.115  <-- LOW RECALL
+  Platinum  n=  307 churners=  21 AUC=0.877 R@10=0.238  (too small to conclude)
+
+✓ Model saved to ./model\model.xgb
+(no --register; skipping Model Registry)
+[[2258   82]
+ [ 442  218]]
+🏃 View run xgb-d3-eta0.05-final-v320 at: https://mlflow.sagemaker.us-east-1.app.aws/#/experiments/1/runs/d3f43da24c224c00b3b97ab663889b82
+🧪 View experiment at: https://mlflow.sagemaker.us-east-1.app.aws/#/experiments/1
+
+============================================================
+Training complete. AUC-ROC: 0.7840
+============================================================
