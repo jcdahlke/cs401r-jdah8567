@@ -43,7 +43,7 @@ Demo: [`notebooks/lab3-demo.ipynb`](../notebooks/lab3-demo.ipynb).
 - Platinum was listed as $10,000+; the policy says $5,000+.
 - Gold was credited with "free expedited shipping on orders over $200", which no tier has.
 
-I corrected the file, but my pipeline doesn't inject that block: tier facts reach the model only from the retrieved policy text.
+I corrected the file, but my pipeline never injects that block. Tier facts reach the model only from the policy documents themselves, in two ways: the retrieved chunks, and the tier card, which `tier_benefit_card()` parses from the §4 table in `loyalty-program-terms.md` at run time.
 
 **Data-versus-policy tier gap.** The feature store's `loyalty_tier` is derived from `total_lifetime_value`, while POL-LOY-011 §2 defines tier by trailing 12-month spend. The current pipeline takes the feature-store tier as given, which is a known limitation. Failure 2 in the examples file shows the consequence: an offer told a Silver customer they were "$15 from Gold", computed from lifetime value. The intended production design is to read the tier and trailing spend from the loyalty system of record at generation time. Until then, the prompt should forbid stating distance to a tier and should tie benefits to "your current tier" rather than to a computed number.
 
