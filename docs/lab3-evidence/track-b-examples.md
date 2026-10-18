@@ -7,8 +7,14 @@ by hand against `northstar-policy-docs/`.
 - **Generator:** `us.anthropic.claude-haiku-4-5-20251001-v1:0`, temperature 0.2
 - **Judge (RAGAS):** `us.anthropic.claude-haiku-4-5-20251001-v1:0`, temperature 0
 - **Retrieval:** top 6 of 48 header-based chunks. Chunk IDs are `<file>#<chunk index>`.
-- **Configs:** "baseline" = retrieved chunks only in `contexts`; "improved" = retrieved chunks plus the
-  customer profile as one extra context string.
+- **Configs:**
+  - "baseline" = retrieved chunks only in `contexts`.
+  - "improved" = retrieved chunks plus the customer profile as one extra context string.
+  - "tiercard" (final) = improved plus the customer's own column of the §4 benefits table, parsed from the
+    policy at run time and added to the prompt and `contexts`.
+- **Scores (mean faithfulness / answer relevancy / context recall):** baseline 0.412 / 0.376 / 0.496,
+  improved 0.521 / 0.369 / 0.608, tiercard 0.469 / 0.369 / 0.608.
+  See `docs/lab3-model-design.md` §2.2–2.3.
 - **Scores:** F = faithfulness, AR = answer relevancy, CR = context recall.
 
 Chunks that appear below:
@@ -134,6 +140,14 @@ to honour. So in production this is the most expensive failure the pipeline can 
    regex. Compare each against that tier's column, and regenerate (or block) any offer that cites a value from
    another tier. This check is deterministic, so it catches the error even when the model makes it.
 
+**Fix 1 applied and measured (config `tiercard`, `docs/lab3-evidence/rag_eval.csv`):** wrong-tier claims went
+from **2 of 8 offers to 0 of 8**.
+- CUST-10000904 (Bronze) no longer mentions a birthday reward from another tier.
+- CUST-10000588 (Silver) now says "early access to sales (12 hours ahead)" in both runs.
+
+Mean faithfulness didn't rise (0.521 → 0.469, inside run-to-run noise), because the remaining unsupported
+claims are Failure 2's invented figures. Fix 2 (the number check) is still proposed, not implemented.
+
 ### Failure 2 — Invented promotions and arithmetic
 
 **Cases:**
@@ -149,6 +163,14 @@ to honour. So in production this is the most expensive failure the pipeline can 
   "$10 when you spend $150" is a promotion that exists nowhere in the corpus. The "$15" is $2,000 − $1,985
   (total_lifetime_value), but POL-LOY-011 §2 sets tier by *trailing 12-month* spend, not lifetime value. This
   is the feature-store/policy gap the lab warns about, turned into a specific promise.
+
+- **Still present after the tier card (config `tiercard`):**
+  - CUST-10000317 run 2: "**$4.68 in redemption value on every $100** spent". It should be $7.50: 1.5×
+    earns 150 points, and 100 points = $5.
+  - CUST-10000904 run 2: "an **extra 500 bonus points** to help you reach Silver tier faster".
+  - CUST-10000588: "bringing you closer to your **$2,015 lifetime value goal**".
+
+  So this failure is independent of the tier fix and needs its own.
 
 **Retrieved (122):** `loyalty-program-terms#9`, `customer-faq#2`, `return-policy#2`, `loyalty-program-terms#2`, `loyalty-program-terms#5`, `loyalty-program-terms#6`
 

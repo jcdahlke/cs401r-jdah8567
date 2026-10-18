@@ -12,7 +12,29 @@ def get_index():
     return _DOCS, _INDEX
 
 
-def answer_customer_rag(customer_context: dict, question: str, include_profile: bool = True) -> dict:
+def tier_benefit_card(tier: str) -> str:
+    """Build THIS tier's benefits as a flat list, parsed from the policy table
+    (POL-LOY-011 section 4) at run time -- not a hand-written copy, so it cannot drift
+    from the policy. Fixes Failure 1: the model was reading values from the wrong
+    column of the 5-column markdown table even when the table ranked first."""
+    path = Path(__file__).resolve().parent.parent / "northstar-policy-docs" / "loyalty-program-terms.md"
+    text = path.read_text(encoding="utf-8")
+    section = text[text.index("## 4. Tier Benefits"):]
+    rows = [l for l in section.splitlines() if l.strip().startswith("|")]
+    header = [c.strip() for c in rows[0].strip("|").split("|")]
+    if tier not in header:
+        return ""
+    col = header.index(tier)
+    lines = []
+    for row in rows[2:]:                      # skip header and |---| separator
+        cells = [c.strip().replace("**", "") for c in row.strip("|").split("|")]
+        lines.append(f"- {cells[0]}: {cells[col]}")
+    return (f"{tier} tier benefits (POL-LOY-011 section 4; 'No' means this tier does not have it):\n"
+            + "\n".join(lines))
+
+
+def answer_customer_rag(customer_context: dict, question: str, include_profile: bool = True,
+                        use_tier_card: bool = True) -> dict:
     docs, index = get_index()
 
     # Put the tier in the retrieval query so the tier-benefits chunk ranks higher
@@ -31,7 +53,9 @@ def answer_customer_rag(customer_context: dict, question: str, include_profile: 
         retrieved_chunks.append(docs[idx].page_content)
         chunk_ids.append(docs[idx].metadata["id"])
 
-    llm_prompt = generate_prompt(retrieved_chunks, customer_context)
+    tier_card = tier_benefit_card(tier) if use_tier_card else ""
+
+    llm_prompt = generate_prompt(retrieved_chunks, customer_context, tier_card)
 
     # keyword args: question is the user message, llm_prompt is the system prompt
     answer = generate_with_claude_haiku(prompt=question, system_prompt=llm_prompt)
@@ -40,6 +64,9 @@ def answer_customer_rag(customer_context: dict, question: str, include_profile: 
     if include_profile:
         # RAGAS needs strings; the profile lets the judge verify profile facts in the offer
         contexts.append(f"Customer profile: {customer_context}")
+    if tier_card:
+        # the judge must see the card too, or claims taken from it count as unsupported
+        contexts.append(tier_card)
 
     output = {
         "answer": answer,
@@ -104,7 +131,7 @@ def generate_with_claude_haiku(prompt: str, system_prompt: str, temperature: flo
         print(f"AWS Bedrock error: {e.response['Error']['Message']}")
         raise
 
-def generate_prompt(retrieved_chunks,customer_context):
+def generate_prompt(retrieved_chunks, customer_context, tier_card=""):
     prompt = f"""
                 # Role
                 Your job is to answer customer questions using retrieved context via a RAG System.
@@ -119,6 +146,11 @@ def generate_prompt(retrieved_chunks,customer_context):
 
     for i in range(len(retrieved_chunks)):
         prompt += f"{i}: {retrieved_chunks[i]}\n"
+
+    if tier_card:
+        prompt += ("\n# This customer's tier benefits (authoritative)\n" + tier_card +
+                   "\nFor ANY tier benefit, use ONLY the values in this list. "
+                   "Do not use values from other tiers' columns in the table above.\n\n")
 
     prompt += "# Rules\n- Response must be 2-3 sentences long, no more, no less\n- Use only benefits this tier has\n- recommend one specific product category from the customer's top_categories\n- do not use greetings or madeup deadlines"
 

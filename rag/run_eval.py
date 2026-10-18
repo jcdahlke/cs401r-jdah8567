@@ -2,7 +2,8 @@
 the customer profile in `contexts` (the before/after improvement for the rubric).
 
 Run from the repo root:
-    python rag/run_eval.py                 # 2 runs baseline + 2 runs improved
+    python rag/run_eval.py                 # 2 runs of every config
+    python rag/run_eval.py --only tiercard # just the tier-card change
     python rag/run_eval.py --runs 3
     python rag/run_eval.py --only improved # re-run just one config
 
@@ -27,13 +28,18 @@ from offer_rag import answer_customer_rag
 
 METRICS = ["faithfulness", "answer_relevancy", "context_recall"]
 CONFIGS = {
-    "baseline": lambda c, q: answer_customer_rag(c, q, include_profile=False),
-    "improved": lambda c, q: answer_customer_rag(c, q, include_profile=True),
+    # change 1: add the customer profile as a context
+    "baseline": lambda c, q: answer_customer_rag(c, q, include_profile=False, use_tier_card=False),
+    "improved": lambda c, q: answer_customer_rag(c, q, include_profile=True, use_tier_card=False),
+    # change 2: add this tier's benefits, parsed from the POL-LOY-011 table, to prompt + contexts
+    "tiercard": lambda c, q: answer_customer_rag(c, q, include_profile=True, use_tier_card=True),
 }
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--runs", type=int, default=2)
 parser.add_argument("--only", choices=list(CONFIGS), default=None)
+parser.add_argument("--final", choices=list(CONFIGS), default="tiercard",
+                    help="config saved as docs/lab3-evidence/rag_eval.csv (the graded file)")
 args = parser.parse_args()
 
 results_dir = ROOT / "evaluation_results"
@@ -63,8 +69,9 @@ all_df.to_csv(all_path, index=False)
 
 for config in all_df["config"].unique():
     sub = all_df[all_df["config"] == config]
-    name = "rag_eval.csv" if config == "improved" else f"rag_eval_{config}.csv"
-    sub.to_csv(evidence_dir / name, index=False)
+    sub.to_csv(evidence_dir / f"rag_eval_{config}.csv", index=False)
+    if config == args.final:
+        sub.to_csv(evidence_dir / "rag_eval.csv", index=False)
 
 # ---- summary you can paste into the writeup ----
 print(f"\nJudge model: {judge}")
