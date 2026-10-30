@@ -415,8 +415,3 @@ class TestBoundaryAndEdgeCases:
                                     holdout_end=pd.Timestamp("2026-06-30"))
         labels = dict(zip(f["customer_id"], f["churn_label"]))
         assert labels == {"CUST-10000001": 1, "CUST-10000002": 0, "CUST-10000003": 1}
-
-
-def test_deliberate_failure_for_lab4_demo():
-    """Lab 4 Task 2: deliberate failure to prove the pipeline halts in PRE_BUILD."""
-    assert 1 == 2, "Deliberate failure: the pipeline must halt before training"
