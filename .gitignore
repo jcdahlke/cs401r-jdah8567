@@ -10,3 +10,10 @@ __pycache__/
 .aws/
 .localstack/
 northstar-raw-sample.csv
+
+# Lab 4: data downloaded for local test runs (the data/ package itself is tracked)
+data/processed/
+data/features/
+data/*.csv
+reports/
+.pytest_cache/

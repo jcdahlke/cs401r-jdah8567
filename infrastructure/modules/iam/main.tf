@@ -45,8 +45,20 @@ resource "aws_iam_policy" "ml_engineer" {
           "sagemaker:CreateMlflowApp", "sagemaker:DescribeMlflowApp", "sagemaker:ListMlflowApps",
           "sagemaker:CreatePresignedMlflowAppUrl",
           "sagemaker:RegisterModel", "sagemaker:DescribeModelPackage", "sagemaker:ListModelPackages",
+          # Lab 4: the SageMaker Pipeline runs as this role, registers packages and tags its jobs
+          "sagemaker:CreateModelPackage", "sagemaker:UpdateModelPackage",
+          "sagemaker:CreateModelPackageGroup", "sagemaker:DescribeModelPackageGroup",
+          "sagemaker:AddTags", "sagemaker:ListTags",
         ]
         Resource = "*"
+      },
+      {
+        # Lab 4: the pipeline (running as MLEngineer) hands this same role to its training job
+        Sid       = "PassSelfToSageMaker"
+        Effect    = "Allow"
+        Action    = ["iam:PassRole"]
+        Resource  = aws_iam_role.ml_engineer.arn
+        Condition = { StringEquals = { "iam:PassedToService" = "sagemaker.amazonaws.com" } }
       },
       {
         Sid    = "StudioSelfService"
