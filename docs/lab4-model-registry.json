@@ -1,0 +1,42 @@
+{
+    "ModelPackageSummaryList": [
+        {
+            "ModelPackageGroupName": "northstar-churn-models",
+            "ModelPackageVersion": 4,
+            "ModelPackageArn": "arn:aws:sagemaker:us-east-1:342973270367:model-package/northstar-churn-models/4",
+            "CreationTime": "2026-10-30T16:13:25.842000-06:00",
+            "ModelPackageStatus": "Completed",
+            "ModelApprovalStatus": "PendingManualApproval",
+            "ModelPackageRegistrationType": "Registered"
+        },
+        {
+            "ModelPackageGroupName": "northstar-churn-models",
+            "ModelPackageVersion": 3,
+            "ModelPackageArn": "arn:aws:sagemaker:us-east-1:342973270367:model-package/northstar-churn-models/3",
+            "CreationTime": "2026-10-30T15:36:10.027000-06:00",
+            "ModelPackageStatus": "Completed",
+            "ModelApprovalStatus": "Approved",
+            "ModelPackageRegistrationType": "Registered"
+        },
+        {
+            "ModelPackageGroupName": "northstar-churn-models",
+            "ModelPackageVersion": 2,
+            "ModelPackageArn": "arn:aws:sagemaker:us-east-1:342973270367:model-package/northstar-churn-models/2",
+            "ModelPackageDescription": "XGBoost churn model 20261014T162522Z. AUC 0.784, P@10 0.7267, R@10 0.3303, lift CI [0.0416, 0.0795]",
+            "CreationTime": "2026-10-14T10:25:24.626000-06:00",
+            "ModelPackageStatus": "Completed",
+            "ModelApprovalStatus": "PendingManualApproval",
+            "ModelPackageRegistrationType": "Registered"
+        },
+        {
+            "ModelPackageGroupName": "northstar-churn-models",
+            "ModelPackageVersion": 1,
+            "ModelPackageArn": "arn:aws:sagemaker:us-east-1:342973270367:model-package/northstar-churn-models/1",
+            "ModelPackageDescription": "XGBoost churn model 20261013T185213Z. AUC 0.7764, P@10 0.7033, R@10 0.3197, lift CI [0.0346, 0.0725]",
+            "CreationTime": "2026-10-13T12:52:14.416000-06:00",
+            "ModelPackageStatus": "Completed",
+            "ModelApprovalStatus": "PendingManualApproval",
+            "ModelPackageRegistrationType": "Registered"
+        }
+    ]
+}
